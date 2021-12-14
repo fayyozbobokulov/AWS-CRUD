@@ -1,0 +1,60 @@
+service: my-first-project
+frameworkVersion: "2 || 3"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: "20201221"
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-east-1:617763403607:table/ToDoTable
+
+functions:
+  addToDo:
+    handler: src/addToDo.handler
+    events:
+      - httpApi:
+          path: /
+          method: post
+  fetchToDos:
+    handler: src/fetchToDos.handler
+    events:
+      - httpApi:
+          path: /todos
+          method: get
+  fetchToDo:
+    handler: src/fetchToDo.handler
+    events:
+      - httpApi:
+          path: /todo/{id}
+          method: get
+  updateToDo:
+    handler: src/updateToDo.handler
+    events:
+      - httpApi:
+          path: /todo/{id}
+          method: put
+  deleteToDo:
+    handler: src/deleteToDo.handler
+    events:
+      - httpApi:
+          path: /todo/{id}
+          method: delete
+
+resources:
+  Resources:
+    ToDoTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ToDoTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
