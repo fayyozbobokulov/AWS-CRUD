@@ -1,15 +1,13 @@
 const AWS = require("aws-sdk");
 
 const deleteToDo = async (event) => {
-  const dynamodb = new AWS.DynamoDB.DocumentClient();
-  const { id } = event.pathParameters;
-
-  dynamodb.delete({
-    TableName: "ToDOTable",
-    Key: { id },
-  });
+  console.log(event);
+  return {
+    statusCode: 200,
+    body: JSON.stringify("Deleted Successfully!!!"),
+  };
 };
 
 module.exports = {
-  deleteToDo,
+  handler: deleteToDo,
 };
